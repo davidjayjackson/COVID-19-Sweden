@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-Reported: "12/14/2020"
+date: "12/15/2020"
 output: html_document
 ---
 
@@ -19,97 +19,86 @@ theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed'
 ```{r}
 rm(list=ls())
 source("../DATA/movavg.R")
-db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
-df <- dbGetQuery(db,"select * from ECDC ")
-df <- subset(df,Countries =="Sweden"  )
-df$Reported <- as.Date(df$Reported)
-df <- df[order(df$Reported),]
-df$CMA <- ma(df$Cases,7)
-df$DMA <- ma(df$Deaths,7)
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/OURWORLD.sqlite3")
+df <- dbGetQuery(db,"select * from JHU ")
+df <- subset(df,location =="Sweden"  )
+df$date <- as.Date(df$date)
+df <- df[order(df$date),]
+df$CMA <- ma(df$new_cases,7)
+df$DMA <- ma(df$new_deaths,7)
 ```
 
-#### Daily COVID-19 Cases
+#### Daily COVID-19 new_cases
 
 ```{r}
-df %>% filter(Reported >="2020-02-27" & Cases >0) %>%
-ggplot() + geom_line(aes(x=Reported,y=Cases)) +
-  geom_smooth(aes(x=Reported,y=Cases),span=0.25) +
-  labs(title="Sweden Daily Cases")
+df %>% filter(date >="2020-02-27" & new_cases >0) %>%
+ggplot() + geom_line(aes(x=date,y=new_cases)) +
+  geom_smooth(aes(x=date,y=new_cases),span=0.25) +
+  labs(title="Sweden Daily new_cases")
 
-ggplot(df) + geom_line(aes(x=Reported,y=CMA),col="red") + 
-  labs(title="Seven Day Moving Average: Cases")
+ggplot(df) + geom_line(aes(x=date,y=CMA),col="red") + 
+  labs(title="Seven Day Moving Average: new_cases")
 
 ```
 
-#### Daily Deaths
+#### Daily new_deaths
 
 ```{r}
-df %>% filter(Reported>="2020-03-20" & Deaths>0) %>%
-ggplot() +  geom_line(aes(x=Reported,y=Deaths)) +
-  geom_smooth(aes(x=Reported,y=Deaths),span=0.25) +
-  labs(title="Sweden Daily Deaths") 
+df %>% filter(date>="2020-03-20" & new_deaths>0) %>%
+ggplot() +  geom_line(aes(x=date,y=new_deaths)) +
+  geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
+  labs(title="Sweden Daily new_deaths") 
 
-ggplot(df) + geom_line(aes(x=Reported,y=DMA),col="red") + 
-  labs(title="Seven Day Moving Average: Deaths")
+ggplot(df) + geom_line(aes(x=date,y=DMA),col="red") + 
+  labs(title="Seven Day Moving Average: new_deaths")
   
-```
-
-### df COVID19 Mortality Rate
-
-```{r}
-df$Rate <- df$Deaths/df$Cases 
-df %>% filter(Reported >= "2020-03-01") %>%
-ggplot() + geom_line(aes(x=Reported,y=Rate)) +
-  scale_y_continuous(labels = scales::percent) +
-  labs(title="COVID19 Mortality Rate ",x="Reported Reported",y="Mortality Rate") + geom_hline(yintercept = mean(na.omit(df$Rate)),col="red",lwd=1.5)
-
 ```
 
 #### Non-Moving Average By Week and By Month
 
 ```{r}
-df$Monthly <- as.Date(cut(df$Reported,
+df$Monthly <- as.Date(cut(df$date,
   breaks = "month"))
-df$Weekly <- as.Date(cut(df$Reported,
+df$Weekly <- as.Date(cut(df$date,
   breaks = "week",
   start.on.monday = FALSE))
 
 ```
 ```{r}
-Weekly_Cases <- aggregate(Cases~Weekly,df,FUN=sum)
-Weekly_Deaths <- aggregate(Deaths~Weekly,df,FUN=sum)
-Weekly_Cases$DRate <- Weekly_Deaths$Deaths/Weekly_Cases$Cases
+Weekly_new_cases <- aggregate(new_cases~Weekly,df,FUN=sum)
+Weekly_new_deaths <- aggregate(new_deaths~Weekly,df,FUN=sum)
+Weekly_new_cases$DRate <- Weekly_new_deaths$new_deaths/Weekly_new_cases$new_cases
 
 ```
 ```{r}
-ggplot(Weekly_Cases) + geom_col(aes(x=Weekly,y=Cases)) + 
-  labs(title="Weekly Cases",x="Reported Reported", y="Weekly Cases") +
-  geom_hline(yintercept = mean(Weekly_Cases$Cases),col="red",lwd=1.5) +
+ggplot(Weekly_new_cases) + geom_col(aes(x=Weekly,y=new_cases)) + 
+  labs(title="Weekly new_cases",x="date date", y="Weekly new_cases") +
+  geom_hline(yintercept = mean(Weekly_new_cases$new_cases),col="red",lwd=1.5) +
   scale_y_continuous(labels = scales::comma) 
 
 
-ggplot(Weekly_Deaths) + geom_col(aes(x=Weekly,y=Deaths)) + 
-  labs(title="Weekly Deaths",x="Reported Reported", y="Weekly Deaths") +
+ggplot(Weekly_new_deaths) + geom_col(aes(x=Weekly,y=new_deaths)) + 
+  labs(title="Weekly new_deaths",x="date date", y="Weekly new_deaths") +
   scale_y_continuous(labels = scales::comma) +
-  geom_hline(yintercept = mean(Weekly_Deaths$Deaths),col="red",lwd=1.5)
+  geom_hline(yintercept = mean(Weekly_new_deaths$new_deaths),col="red",lwd=1.5)
 ``` 
 
-#### Monthly Cases and Deaths
+#### Monthly new_cases and new_deaths
 
 ```{r}
 
-Monthly_Cases <- aggregate(Cases~Monthly,df,FUN=sum)
-Monthly_Deaths <- aggregate(Deaths~Monthly,df,FUN=sum)
-Monthly_Cases$DRate <- Monthly_Deaths$Deaths/Monthly_Cases$Cases
+Monthly_new_cases <- aggregate(new_cases~Monthly,df,FUN=sum)
+Monthly_new_deaths <- aggregate(new_deaths~Monthly,df,FUN=sum)
+Monthly_new_cases$DRate <- Monthly_new_deaths$new_deaths/Monthly_new_cases$new_cases
 
 ```
 ```{r}
-ggplot(Monthly_Cases) + geom_col(aes(x=Monthly,y=Cases)) +
-  labs(title="Monthly Cases") +
+ggplot(Monthly_new_cases) + geom_col(aes(x=Monthly,y=new_cases)) +
+  labs(title="Monthly new_cases") +
   scale_y_continuous(labels = scales::comma)
 
-ggplot(Monthly_Deaths) + geom_col(aes(x=Monthly,y=Deaths)) +
-  labs(title="Monthly Deaths") +
+ggplot(Monthly_new_deaths) + geom_col(aes(x=Monthly,y=new_deaths)) +
+  labs(title="Monthly new_deaths") +
   scale_y_continuous(labels = scales::comma)
 ```
 
