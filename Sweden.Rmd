@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "12/15/2020"
+date: "12/16/2020"
 output: 
   html_document: 
     fig_width: 8
@@ -34,6 +34,7 @@ df <- df[order(df$date),]
 EU <- EU[order(EU$date),]
 df$CMA <- ma(df$new_cases,7)
 df$DMA <- ma(df$new_deaths,7)
+dbDisconnect(db)
 ```
 
 #### Daily COVID-19 new_cases
