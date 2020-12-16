@@ -2,7 +2,10 @@
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
 date: "12/15/2020"
-output: html_document
+output: 
+  html_document: 
+    fig_width: 8
+    fig_height: 5
 ---
 
 ```{r setup, include=FALSE}
@@ -13,17 +16,22 @@ library(RSQLite)
 library(plotly)
 library(dplyr)
 library(forecast)
-theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed')))
+# theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed')))
+theme_set(theme_light())
 
 ```
 ```{r}
 rm(list=ls())
 source("../DATA/movavg.R")
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/OURWORLD.sqlite3")
+EU <- dbGetQuery(db,"select * from JHU ")
 df <- dbGetQuery(db,"select * from JHU ")
+
 df <- subset(df,location =="Sweden"  )
 df$date <- as.Date(df$date)
+EU$date <- as.Date(EU$date)
 df <- df[order(df$date),]
+EU <- EU[order(EU$date),]
 df$CMA <- ma(df$new_cases,7)
 df$DMA <- ma(df$new_deaths,7)
 ```
@@ -102,3 +110,50 @@ ggplot(Monthly_new_deaths) + geom_col(aes(x=Monthly,y=new_deaths)) +
   scale_y_continuous(labels = scales::comma)
 ```
 
+#### Sweden in the EU: Covid-19 Cases and Deaths
+* EU Counties with Population between 9,000,000 and 12,000,000
+
+```{r}
+
+EU1 <- subset(EU,location == c("Belgium","Czechia","Greece","Sweden","Hungary","Austria"))
+
+EUTotal <-EU1 %>% group_by(location) %>% summarise(
+                                Case =sum(new_cases),
+                                Deaths = sum(new_deaths))
+EUTotal$Rate <- EUTotal$Deaths/EUTotal$Case
+```
+
+#### Plots of Total Cases and Deaths
+
+```{r}
+ggplot(EUTotal) + geom_col(aes(x=reorder(location,Case),y=Case)) + 
+  labs(title="Total Cases by Country",x="Countries",y="Total Cases") + scale_y_continuous(label=comma)
+
+``` 
+```{r}
+ggplot(EUTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) + 
+  labs(title="Total Deaths by Country",x="Countries",y="Total  Deaths") + scale_y_continuous(label=comma)
+
+```
+
+#### Total Cases  by Day.
+
+```{r}
+EU2 <- EU1 %>% filter(date >="2020-09-01")
+EU2 %>% ggplot(aes(x=date,y=new_cases,col="Cases"))+geom_line() + facet_wrap(~location,ncol = 2)
+```
+
+#### Total Deaths  by Day.
+
+```{r}
+EU2 <- EU1 %>% filter(date >="2020-09-01")
+EU2 %>% ggplot(aes(x=date,y=new_deaths,col="Deaths"))+geom_line() + facet_wrap(~location,ncol = 2)
+```
+
+#### Countries by Total Mortality Rate
+
+```{r}
+ggplot(EUTotal) + geom_col(aes(x=reorder(location,Rate),y=Rate)) + 
+  labs(title="Total Mortality Rates by Country",x="Countries",y="Total  Deaths") + scale_y_continuous(label=percent)
+
+```
