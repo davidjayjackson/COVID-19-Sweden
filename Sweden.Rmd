@@ -141,14 +141,16 @@ ggplot(EUTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) +
 
 ```{r}
 EU2 <- EU1 %>% filter(date >="2020-09-01")
-EU2 %>% ggplot(aes(x=date,y=new_cases,col="Cases"))+geom_line() + facet_wrap(~location,ncol = 2)
+EU2 %>% ggplot(aes(x=date,y=new_cases,col="Cases"))+geom_line() + facet_wrap(~location,ncol = 2,scales="free_y") +
+  expand_limits(y=0)
 ```
 
 #### Total Deaths  by Day.
 
 ```{r}
 EU2 <- EU1 %>% filter(date >="2020-09-01")
-EU2 %>% ggplot(aes(x=date,y=new_deaths,col="Deaths"))+geom_line() + facet_wrap(~location,ncol = 2)
+EU2 %>% ggplot(aes(x=date,y=new_deaths,col="Deaths"))+geom_line() + facet_wrap(~location,ncol = 2,scales="free_y") +expand_limits(y=0)
+  
 ```
 
 #### Countries by Total Mortality Rate
