@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "12/22/2020 09:25PM EDT"
+date: "12/25/2020 10:40PM EDT"
 output: 
   html_document: 
     fig_width: 8
@@ -45,8 +45,8 @@ ggplot() + geom_line(aes(x=date,y=new_cases)) +
   geom_smooth(aes(x=date,y=new_cases),span=0.25) +
   labs(title="Sweden Daily Dailycases")
 
-ggplot(df) + geom_area(aes(x=date,y=CMA)) + 
-  labs(title="Seven Day Moving Average: Cases")
+ggplot(df) + geom_col(aes(x=date,y=CMA)) + 
+  labs(title="Fourteen Day Moving Average: Cases")
 
 ```
 
@@ -131,9 +131,9 @@ ggplot(EUTotal) + geom_col(aes(x=reorder(location,Case),y=Case)) +
   labs(title="Total Cases by Country",x="Countries",y="Total Cases") + scale_y_continuous(label=comma)
 
 ``` 
-```{r}
-ggplot(EUTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) + 
-  labs(title="Total Deaths by Country",x="Countries",y="Total  Deaths") + scale_y_continuous(label=comma)
+ ```{r}
+# ggplot(EUTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) + 
+#   labs(title="Total Deaths by Country",x="Countries",y="Total  Deaths") + scale_y_continuous(label=comma)
 
 ```
 
@@ -153,10 +153,3 @@ EU2 %>% ggplot(aes(x=date,y=new_deaths,col="Deaths"))+geom_line() + facet_wrap(~
   
 ```
 
-#### Countries by Total Mortality Rate
-
-```{r}
-ggplot(EUTotal) + geom_col(aes(x=reorder(location,Rate),y=Rate)) + 
-  labs(title="Total Mortality Rates by Country",x="Countries",y="Total  Deaths") + scale_y_continuous(label=percent)
-
-```
