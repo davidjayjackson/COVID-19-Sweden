@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "12/25/2020 10:40PM EDT"
+date: "12/27/2020 08:50PM EDT"
 output: 
   html_document: 
     fig_width: 8
@@ -133,7 +133,7 @@ ggplot(EUTotal) + geom_col(aes(x=reorder(location,Case),y=Case)) +
 ``` 
  ```{r}
 # ggplot(EUTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) + 
-#   labs(title="Total Deaths by Country",x="Countries",y="Total  Deaths") + scale_y_continuous(label=comma)
+#   labs(title="Total Deaths by Country",x="Countries",y="Total  Deaths") + #scale_y_continuous(label=comma)
 
 ```
 
