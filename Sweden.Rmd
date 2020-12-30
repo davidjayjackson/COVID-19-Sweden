@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "12/27/2020 08:50PM EDT"
+date: "12/29/2020 08:45PM EDT"
 output: 
   html_document: 
     fig_width: 8
@@ -45,7 +45,7 @@ ggplot() + geom_line(aes(x=date,y=new_cases)) +
   geom_smooth(aes(x=date,y=new_cases),span=0.25) +
   labs(title="Sweden Daily Dailycases")
 
-ggplot(df) + geom_col(aes(x=date,y=CMA)) + 
+ggplot(df) + geom_col(aes(x=date,y=CMA,col=CMA)) + 
   labs(title="Fourteen Day Moving Average: Cases")
 
 ```
@@ -59,7 +59,7 @@ ggplot() +  geom_line(aes(x=date,y=new_deaths)) +
   labs(title="Sweden Daily Deaths") 
 
 ggplot(df) + geom_area(aes(x=date,y=DMA)) + 
-  labs(title="Seven Day Moving Average: Deaths")
+  labs(title="Fourteen Day Moving Average: Deaths")
   
 ```
 
