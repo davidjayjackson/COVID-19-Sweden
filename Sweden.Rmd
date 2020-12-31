@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "12/29/2020 08:45PM EDT"
+date: "12/30/2020 11:30PM EDT"
 output: 
   html_document: 
     fig_width: 8
@@ -151,5 +151,32 @@ EU2 %>% ggplot(aes(x=date,y=new_cases,col="Cases"))+geom_line() + facet_wrap(~lo
 EU2 <- EU1 %>% filter(date >="2020-09-01")
 EU2 %>% ggplot(aes(x=date,y=new_deaths,col="Deaths"))+geom_line() + facet_wrap(~location,ncol = 2,scales="free_y") +expand_limits(y=0)
   
+```
+
+### Cumlative Totals (Cases and Deaths) for Sweden
+* Total Cases and Deaths todate
+
+```{r}
+df %>% ggplot() + geom_col(aes(x=date,y=total_cases)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="Sweden Cumulative Cases by Date")
+
+df %>% ggplot() + geom_col(aes(x=date,y=total_deaths)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="Sweden Cumulative Deaths by Date")
+```
+
+#### Plot by Country
+
+```{r}
+EU1 %>% ggplot() + geom_line(aes(x=date,y=total_cases),col="red") +
+  scale_y_continuous(labels = comma) +
+  labs(title=" Cumulative Cases by Country") +
+  facet_wrap(~location,ncol = 2,scales="free_y")
+
+EU1 %>% ggplot() + geom_line(aes(x=date,y=total_deaths),col="red") +
+  scale_y_continuous(labels = comma) +
+  labs(title="Cumulative Deaths by Country") +
+  facet_wrap(~location,ncol = 2,scales="free_y")
 ```
 
