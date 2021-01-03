@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "01/02/2020 02:00PM EDT"
+date: "01/02/2020 11:15PM EDT"
 output: 
   html_document: 
     fig_width: 8
@@ -32,8 +32,8 @@ df$date <- as.Date(df$date)
 EU$date <- as.Date(EU$date)
 df <- df[order(df$date),]
 EU <- EU[order(EU$date),]
-df$CMA <- ma(df$new_cases,14,centre=TRUE)
-df$DMA <- ma(df$new_deaths,14,centre=TRUE)
+df$CMA <- ma(df$new_cases,7,centre=TRUE)
+df$DMA <- ma(df$new_deaths,7,centre=TRUE)
 dbDisconnect(db)
 ```
 
@@ -46,7 +46,7 @@ ggplot() + geom_line(aes(x=date,y=new_cases)) +
   labs(title="Sweden Daily Dailycases")
 
 ggplot(df) + geom_col(aes(x=date,y=CMA,col=CMA)) + 
-  labs(title="Fourteen Day Moving Average: Cases")
+  labs(title="seven Day Moving Average: Cases")
 
 ```
 
@@ -58,8 +58,8 @@ ggplot() +  geom_line(aes(x=date,y=new_deaths)) +
   geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
   labs(title="Sweden Daily Deaths") 
 
-ggplot(df) + geom_area(aes(x=date,y=DMA)) + 
-  labs(title="Fourteen Day Moving Average: Deaths")
+ggplot(df) + geom_col(aes(x=date,y=DMA,col=DMA)) + 
+  labs(title="Seven Day Moving Average: Deaths")
   
 ```
 
@@ -119,8 +119,8 @@ ggplot(Monthly_new_deaths) + geom_col(aes(x=Monthly,y=new_deaths)) +
 EU1 <- subset(EU,location == c("Belgium","Czechia","Greece","Sweden","Hungary","Austria"))
 
 EUTotal <-EU1 %>% group_by(location) %>% summarise(
-                                Case =sum(new_cases),
-                                Deaths = sum(new_deaths))
+                                Case =sum(new_cases,na.rm = TRUE),
+                                Deaths = sum(new_deaths,na.rm = TRUE))
 EUTotal$Rate <- EUTotal$Deaths/EUTotal$Case
 ```
 
@@ -131,9 +131,9 @@ ggplot(EUTotal) + geom_col(aes(x=reorder(location,Case),y=Case)) +
   labs(title="Total Cases by Country",x="Countries",y="Total Cases") + scale_y_continuous(label=comma)
 
 ``` 
- ```{r}
-# ggplot(EUTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) + 
-#   labs(title="Total Deaths by Country",x="Countries",y="Total  Deaths") + #scale_y_continuous(label=comma)
+```{r}
+ggplot(EUTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) + 
+  labs(title="Total Deaths by Country",x="Countries",y="Total  Deaths") + scale_y_continuous(label=comma)
 
 ```
 
@@ -154,14 +154,14 @@ EU2 %>% ggplot(aes(x=date,y=new_deaths,col="Deaths"))+geom_line() + facet_wrap(~
 ```
 
 ### Cumlative Totals (Cases and Deaths) for Sweden
-* Total Cases and Deaths todate
+* Total Cases and Deaths to date
 
 ```{r}
-df %>% ggplot() + geom_col(aes(x=date,y=total_cases)) +
+df %>% ggplot() + geom_col(aes(x=date,y=total_cases,col=total_cases)) +
   scale_y_continuous(labels = comma) +
   labs(title="Sweden Cumulative Cases by Date")
 
-df %>% ggplot() + geom_col(aes(x=date,y=total_deaths)) +
+df %>% ggplot() + geom_col(aes(x=date,y=total_deaths,col=total_deaths)) +
   scale_y_continuous(labels = comma) +
   labs(title="Sweden Cumulative Deaths by Date")
 ```
