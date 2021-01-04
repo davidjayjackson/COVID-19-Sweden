@@ -32,8 +32,8 @@ df$date <- as.Date(df$date)
 EU$date <- as.Date(EU$date)
 df <- df[order(df$date),]
 EU <- EU[order(EU$date),]
-df$CMA <- ma(df$new_cases,14,centre=TRUE)
-df$DMA <- ma(df$new_deaths,14,centre=TRUE)
+df$CMA <- ma(df$new_cases,7,centre=TRUE)
+df$DMA <- ma(df$new_deaths,7,centre=TRUE)
 dbDisconnect(db)
 ```
 
@@ -41,13 +41,21 @@ dbDisconnect(db)
 * https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/
 
 ```{r}
-df %>% filter(date >="2020-12-15" & date <="2020-12-22") %>%
+df %>% filter(date >="2020-12-01" ) %>%
   ggplot() + geom_col(aes(x=date,y=new_cases)) +
   labs(title="Cases: Plot of Tuesday - Friday Data.")
 
-df %>% filter(date >="2020-12-15" & date <="2020-12-22") %>%
+df %>% filter(date >="2020-12-01" ) %>%
+  ggplot() + geom_col(aes(x=date,y=CMA)) +
+  labs(title="Cases : 7 Day Moving Average")
+
+df %>% filter(date >="2020-12-01" ) %>%
   ggplot() + geom_col(aes(x=date,y=new_deaths)) +
-  labs(title="Deaths: Plot of Tuesday - Friday Data.")
+  labs(title="Cases: Plot of Tuesday - Friday Data. ")
+
+df %>% filter(date >="2020-12-01") %>%
+  ggplot() + geom_col(aes(x=date,y=DMA)) +
+  labs(title="Deaths: 7 Day Moving Average")
 ```
 
 
