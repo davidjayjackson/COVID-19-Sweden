@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "01/02/2020 11:15PM EDT"
+date: "01/04/2021 2:50PM EDT"
 output: 
   html_document: 
     fig_width: 8
@@ -32,10 +32,25 @@ df$date <- as.Date(df$date)
 EU$date <- as.Date(EU$date)
 df <- df[order(df$date),]
 EU <- EU[order(EU$date),]
-df$CMA <- ma(df$new_cases,7,centre=TRUE)
-df$DMA <- ma(df$new_deaths,7,centre=TRUE)
+df$CMA <- ma(df$new_cases,14,centre=TRUE)
+df$DMA <- ma(df$new_deaths,14,centre=TRUE)
 dbDisconnect(db)
 ```
+
+#### Example of : Daily data is compiled Tuesdays to Fridays 
+* https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/
+
+```{r}
+df %>% filter(date >="2020-12-15" & date <="2020-12-22") %>%
+  ggplot() + geom_col(aes(x=date,y=new_cases)) +
+  labs(title="Cases: Plot of Tuesday - Friday Data.")
+
+df %>% filter(date >="2020-12-15" & date <="2020-12-22") %>%
+  ggplot() + geom_col(aes(x=date,y=new_deaths)) +
+  labs(title="Deaths: Plot of Tuesday - Friday Data.")
+```
+
+
 
 #### Daily COVID-19 Daily Cases
 
@@ -43,7 +58,7 @@ dbDisconnect(db)
 df %>% filter(date >="2020-02-27" & new_cases >0) %>%
 ggplot() + geom_line(aes(x=date,y=new_cases)) +
   geom_smooth(aes(x=date,y=new_cases),span=0.25) +
-  labs(title="Sweden Daily Dailycases")
+  labs(title="Sweden Daily Daily cases")
 
 ggplot(df) + geom_col(aes(x=date,y=CMA,col=CMA)) + 
   labs(title="seven Day Moving Average: Cases")
