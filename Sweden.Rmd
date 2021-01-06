@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "01/04/2021 2:50PM EDT"
+date: "01/06/2021 2:32PM EDT"
 output: 
   html_document: 
     fig_width: 8
@@ -42,19 +42,19 @@ dbDisconnect(db)
 
 ```{r}
 df %>% filter(date >="2020-12-01" ) %>%
-  ggplot() + geom_col(aes(x=date,y=new_cases)) +
+  ggplot() + geom_line(aes(x=date,y=new_cases)) +
   labs(title="Cases: Plot of Tuesday - Friday Data.")
 
 df %>% filter(date >="2020-12-01" ) %>%
-  ggplot() + geom_col(aes(x=date,y=CMA)) +
+  ggplot() + geom_line(aes(x=date,y=CMA)) +
   labs(title="Cases : 7 Day Moving Average")
 
 df %>% filter(date >="2020-12-01" ) %>%
-  ggplot() + geom_col(aes(x=date,y=new_deaths)) +
-  labs(title="Cases: Plot of Tuesday - Friday Data. ")
+  ggplot() + geom_line(aes(x=date,y=new_deaths)) +
+  labs(title="Deaths: Plot of Tuesday - Friday Data. ")
 
 df %>% filter(date >="2020-12-01") %>%
-  ggplot() + geom_col(aes(x=date,y=DMA)) +
+  ggplot() + geom_line(aes(x=date,y=DMA)) +
   labs(title="Deaths: 7 Day Moving Average")
 ```
 
@@ -68,8 +68,9 @@ ggplot() + geom_line(aes(x=date,y=new_cases)) +
   geom_smooth(aes(x=date,y=new_cases),span=0.25) +
   labs(title="Sweden Daily Daily cases")
 
-ggplot(df) + geom_col(aes(x=date,y=CMA,col=CMA)) + 
-  labs(title="seven Day Moving Average: Cases")
+plot1 <- ggplot(df) + geom_col(aes(x=date,y=CMA,col=CMA)) + 
+  labs(title="Seven Day Moving Average: Cases")
+ggplotly(plot1)
 
 ```
 
@@ -81,8 +82,9 @@ ggplot() +  geom_line(aes(x=date,y=new_deaths)) +
   geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
   labs(title="Sweden Daily Deaths") 
 
-ggplot(df) + geom_col(aes(x=date,y=DMA,col=DMA)) + 
+plot2 <- ggplot(df) + geom_col(aes(x=date,y=DMA,col=DMA)) + 
   labs(title="Seven Day Moving Average: Deaths")
+ggplotly(plot2)
   
 ```
 
