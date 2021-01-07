@@ -62,4 +62,33 @@ short %>% ggplot() + geom_line(aes(x=date,y=MAD))
 ggplotly(plot4)
 ```
 
+## Weekly & Biweekly Totals
+
+```{r}
+df %>% ggplot() + geom_line(aes(x=date,y=weekly_cases)) + 
+  labs(title="Weekly Cases")
+df %>% ggplot() + geom_line(aes(x=date,y=biweekly_cases)) + 
+  labs(title="Biweekly Cases")
+```
+
+```{r}
+df %>% ggplot() + geom_line(aes(x=date,y=weekly_deaths)) + 
+  labs(title="Weekly Deaths")
+df %>% ggplot() + geom_line(aes(x=date,y=biweekly_deaths)) + 
+  labs(title="Biweekly Deaths")
+```
+## Our World In Data: Smooth Numbers
+
+
+```{r}
+EU %>% ggplot() + geom_line(aes(x=date,y=new_cases_smoothed)) + 
+  labs(title="New Cases Smoothed")
+
+```
+
+```{r}
+EU %>% ggplot() + geom_line(aes(x=date,y=new_deaths_smoothed)) + 
+  labs(title="New Deaths Smoothed")
+
+```
 
