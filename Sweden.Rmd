@@ -194,12 +194,12 @@ df %>% ggplot() + geom_col(aes(x=date,y=total_deaths,fill=new_deaths)) +
 #### Plot by Country
 
 ```{r}
-EU1 %>% ggplot() + geom_line(aes(x=date,y=total_cases),fill=location) +
+EU1 %>% ggplot() + geom_area(aes(x=date,y=total_cases,fill=location)) +
   scale_y_continuous(labels = comma) +
   labs(title=" Cumulative Cases by Country") +
   facet_wrap(~location,ncol = 2,scales="free_y")
 
-EU1 %>% ggplot() + geom_line(aes(x=date,y=total_deaths),fill=location) +
+EU1 %>% ggplot() + geom_area(aes(x=date,y=total_deaths,fill=location)) +
   scale_y_continuous(labels = comma) +
   labs(title="Cumulative Deaths by Country") +
   facet_wrap(~location,ncol = 2,scales="free_y")
