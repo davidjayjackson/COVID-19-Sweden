@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "01/18/2021 4:15PM EDT"
+date: "01/21/2021 04:25 PM EDT"
 output: 
   html_document: 
     fig_width: 8
@@ -41,20 +41,20 @@ dbDisconnect(db)
 * https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/
 
 ```{r}
-df %>% filter(date >="2020-12-01" ) %>%
+df %>% filter(date >="2020-01-01" ) %>%
   ggplot() + geom_col(aes(x=date,y=new_cases)) +
   labs(title="Cases: Plot of Tuesday - Friday Data.")
 
-df %>% filter(date >="2020-12-01" ) %>%
-  ggplot() + geom_area(aes(x=date,y=CMA)) +
+df %>% filter(date >="2020-01-01" ) %>%
+  ggplot() + geom_col(aes(x=date,y=CMA)) +
   labs(title="Cases : 7 Day Moving Average")
 
-df %>% filter(date >="2020-12-01" ) %>%
+df %>% filter(date >="2020-01-01" ) %>%
   ggplot() + geom_col(aes(x=date,y=new_deaths)) +
   labs(title="Deaths: Plot of Tuesday - Friday Data. ")
 
-df %>% filter(date >="2020-12-01") %>%
-  ggplot() + geom_area(aes(x=date,y=DMA)) +
+df %>% filter(date >="2020-01-01") %>%
+  ggplot() + geom_col(aes(x=date,y=DMA)) +
   labs(title="Deaths: 7 Day Moving Average")
 ```
 
