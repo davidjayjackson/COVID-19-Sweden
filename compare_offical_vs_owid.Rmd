@@ -1,0 +1,67 @@
+---
+title: "Sweden Compare Offical vs OWID Cases"
+author: "David Jackson"
+date: "1/23/2021"
+output: 
+  html_document: 
+    fig_width: 8
+    fig_height: 6
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(scales)
+library(dplyr)
+library(readxl)
+library(forecast)
+library(RSQLite)
+library(plotly)
+```
+
+```{r}
+rm(list=ls())
+source("../DATA/movavg.R")
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
+SWE <- dbGetQuery(db,"select * from JHU where location ='Sweden'")
+
+SWE$date <- as.Date(SWE$date)
+SWE <- SWE[order(SWE$date),]
+
+SWE$CMA <- ma(SWE$new_cases,6,centre=TRUE)
+SWE$DMA <- ma(SWE$new_deaths,6,centre=TRUE)
+dbDisconnect(db)
+```
+
+```{r}
+Sweden <- readxl::read_xlsx("./Folkhalsomyndigheten_Covid19.xlsx") %>%
+  rename(Date = Statistikdatum) %>%
+  rename(Cases = Totalt_antal_fall)
+
+Sweden$Date <- as.Date(Sweden$Date)
+```
+
+
+
+### Our World In Data: Sweden's Daily Cases
+
+```{r}
+SWE <- SWE %>% filter(date >="2020-11-1")
+Sweden <- Sweden %>% filter(Date >="2020-11-1")
+plot1 <- ggplot() + geom_col(data=SWE,aes(x=date,y=new_cases,col="OWID")) +
+  geom_line(data=Sweden,aes(x=Date,y=Cases,col = "Offical")) +
+  geom_line(data=SWE,aes(x=date,y=CMA,col = "6 Day Mov. Avg."))
+
+ggplotly(plot1)
+```
+
+### OUr World In Data: Sweden's Daily Deaths
+
+```{r}
+plot2 <- ggplot() + geom_col(data=SWE,aes(x=date,y=new_deaths,col="OWID")) +
+geom_line(data=SWE,aes(x=date,y=DMA,col = "6 Day Mov. Avg."))
+
+ggplotly(plot2)
+  
+```
+

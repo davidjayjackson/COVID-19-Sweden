@@ -1,7 +1,7 @@
 ---
 title: "Sweden Offical COVID-19 Cases"
 author: "David Jackson"
-date: "1/21/2021"
+date: "1/23/2021 08:30 PM/EST"
 output: 
   html_document: 
     fig_width: 8
