@@ -17,6 +17,7 @@ library(readxl)
 library(forecast)
 library(RSQLite)
 library(plotly)
+library(BenfordTests)
 ```
 
 ```{r}
@@ -63,5 +64,29 @@ geom_line(data=SWE,aes(x=date,y=DMA,col = "6 Day Mov. Avg."))
 
 ggplotly(plot2)
   
+```
+
+### Benford's Law First Digit Analysis
+
+```{r}
+set.seed(1234)
+X <- rbenf(500)
+```
+```{r}
+signifd.analysis(X)
+```
+
+### Sweden's Cases
+
+```{r}
+first_cases <- SWE$new_cases
+signifd.analysis(first_cases)
+```
+### Sweden's Deaths
+
+```{r}
+set.seed(4567)
+first_deaths <- SWE$new_deaths
+signifd.analysis(first_deaths)
 ```
 
