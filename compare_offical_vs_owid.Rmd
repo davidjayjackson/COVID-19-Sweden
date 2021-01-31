@@ -1,7 +1,7 @@
 ---
 title: "Sweden Compare Offical vs OWID Cases"
 author: "David Jackson"
-date: "1/23/2021"
+date: "2020-01-30 7:20 PM/EST"
 output: 
   html_document: 
     fig_width: 8
