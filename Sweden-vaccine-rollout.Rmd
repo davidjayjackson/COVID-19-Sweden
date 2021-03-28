@@ -1,7 +1,7 @@
 ---
 title: "Sweden's COVID-19 Vaccine Rollout"
 author: "David Jackson"
-date: "3/21/2021 2:35 PM/EST"
+date: "3/28/2021 1:05 PM/EST"
 output: 
   html_document: 
     fig_width: 9
@@ -32,7 +32,7 @@ SWE <- dbGetQuery(db,"select * from OWID where location ='Sweden'")
 SWE$date <- as.Date(SWE$date)
 ```
 ```{r}
-VAC <- SWE %>% filter(date >="2020-12-25") %>% 
+VAC <- SWE %>% filter(date >="2021-03-15") %>% 
   select(date,people_vaccinated, people_fully_vaccinated,
          new_vaccinations,total_vaccinations,population)
 ```
@@ -44,7 +44,7 @@ VAC <- SWE %>% filter(date >="2020-12-25") %>%
 
 ```{r}
 
-p1 <- VAC %>% filter(date>="2021-01-27") %>% ggplot() + geom_line(aes(x=date,y=total_vaccinations)) +
+p1 <- VAC %>% ggplot() + geom_line(aes(x=date,y=total_vaccinations)) +
   scale_y_continuous(labels=comma) +
   labs(title="total_vaccinations")
 ggplotly(p1)
@@ -54,7 +54,7 @@ ggplotly(p1)
 * Total number of people who received at least one vaccine dose.
 
 ```{r}
-p2 <- VAC %>% filter(date>="2021-01-27") %>% ggplot() + geom_line(aes(x=date,y=people_vaccinated,col="People Vacc.")) +
+p2 <- VAC %>% ggplot() + geom_line(aes(x=date,y=people_vaccinated,col="People Vacc.")) +
   geom_line(aes(x=date,y=people_fully_vaccinated, col="People Full Vac.")) +
   scale_y_log10(labels=comma) + 
   
@@ -68,7 +68,7 @@ ggplotly(p2)
 ```{r}
 
 VAC$PeoplePercent <- VAC$people_vaccinated/VAC$population
-VAC %>% filter(date >="2021-01-02") %>%
+VAC %>%
   ggplot(aes(x=date,y=PeoplePercent)) +
     geom_line() + scale_y_continuous(labels= percent) +
   labs(title="Percentage of People Receiving At Least Shot",
@@ -80,7 +80,7 @@ VAC %>% filter(date >="2021-01-02") %>%
 VAC$PeoplFullVac <- VAC$people_fully_vaccinated/VAC$population
 ```
 ```{r}
-VAC %>% filter(date >="2021-01-10") %>%
+VAC %>% 
   ggplot(aes(x=date,y=PeoplFullVac)) +
     geom_line() + scale_y_continuous(labels= percent) +
   labs(title="Percentage of People Fully Vaccinated",
