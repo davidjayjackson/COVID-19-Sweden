@@ -1,7 +1,7 @@
 ---
 title: "Sweden's COVID-19 Vaccine Rollout"
 author: "David Jackson"
-date: "4/18/2021 1:05 PM/EST"
+date: "4/25/2021 3:55 PM/EST"
 output: 
   html_document: 
     fig_width: 9
@@ -32,7 +32,7 @@ SWE <- dbGetQuery(db,"select * from OWID where location ='Sweden'")
 SWE$date <- as.Date(SWE$date)
 ```
 ```{r}
-VAC <- SWE %>% filter(date >="2021-03-15") %>% 
+VAC <- SWE %>% filter(date >="2021-04-15") %>% 
   select(date,people_vaccinated, people_fully_vaccinated,
          new_vaccinations,total_vaccinations,population)
 ```
