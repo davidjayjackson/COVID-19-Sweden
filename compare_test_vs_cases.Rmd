@@ -28,7 +28,7 @@ db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3
 df <- dbGetQuery(db,"select * from OWID where location ='Sweden'")
 df$date <- as.Date(df$date)
 df <- df[order(df$date),]
-SWE <- df %>% select(date,new_cases,new_tests) %>% filter(date >="2020-07-10")
+SWE <- df %>% select(date,new_cases,total_cases,new_tests,total_tests) %>% filter(date >="2020-07-10")
 ```
 
 ### Summary States
