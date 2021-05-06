@@ -1,7 +1,7 @@
 ---
 title: "Sweden's COVID-19 Vaccine Rollout"
 author: "David Jackson"
-date: "05/02/2021 2:05 PM/EST"
+date: "05/06/2021 11:50 AM/EST"
 output: 
   html_document: 
     fig_width: 9
