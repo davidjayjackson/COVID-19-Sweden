@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "05/15/2021  1:30 PM/EST"
+date: "05/17/2021  12:40 PM/EST"
 output: 
   html_document: 
     fig_width: 8
@@ -24,14 +24,13 @@ theme_set(theme_light())
 rm(list=ls())
 source("../DATA/movavg.R")
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
-EU <- dbGetQuery(db,"select * from OWID")
 df <- dbGetQuery(db,"select * from OWID")
-
 df <- subset(df,location =="Sweden"  )
 df$date <- as.Date(df$date)
-EU$date <- as.Date(EU$date)
 df <- df[order(df$date),]
-EU <- EU[order(EU$date),]
+### Replace NA with mean new_deaths
+df$new_deaths[which(is.na(df$new_deaths))] <- mean(df$new_deaths,na.rm = TRUE)
+df$new_deaths<- ifelse(df$new_deaths <0,mean(df$new_deaths,na.rm = TRUE),df$new_deaths)
 df$CMA <- ma(df$new_cases,28,centre=TRUE)
 df$DMA <- ma(df$new_deaths,28,centre=TRUE)
 # dbDisconnect(db)
@@ -110,28 +109,28 @@ ggplot(Monthly_new_deaths) + geom_col(aes(x=Monthly,y=new_deaths)) +
   scale_y_continuous(labels = scales::comma)
 ```
 
-#### Sweden in the EU: Covid-19 Cases and Deaths
-* EU Counties with Population between 9,000,000 and 12,000,000
+#### Sweden in the df: Covid-19 Cases and Deaths
+* df Counties with Population between 9,000,000 and 12,000,000
 
 ```{r}
 
-EU1 <- subset(EU,location == c("Belgium","Czechia","Greece","Sweden","Hungary","Austria"))
+df1 <- subset(df,location == c("Belgium","Czechia","Greece","Sweden","Hungary","Austria"))
 
-EUTotal <-EU1 %>% group_by(location) %>% summarise(
+dfTotal <-df1 %>% group_by(location) %>% summarise(
                                 Case =sum(new_cases,na.rm = TRUE),
                                 Deaths = sum(new_deaths,na.rm = TRUE))
-EUTotal$Rate <- EUTotal$Deaths/EUTotal$Case
+dfTotal$Rate <- dfTotal$Deaths/dfTotal$Case
 ```
 
 #### Plots of Total Cases and Deaths
 
 ```{r}
-ggplot(EUTotal) + geom_col(aes(x=reorder(location,Case),y=Case)) + 
+ggplot(dfTotal) + geom_col(aes(x=reorder(location,Case),y=Case)) + 
   labs(title="Total Cases by Country",x="Countries",y="Total Cases") + scale_y_continuous(label=comma)
 
 ``` 
 ```{r}
-ggplot(EUTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) + 
+ggplot(dfTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) + 
   labs(title="Total Deaths by Country",x="Countries",y="Total  Deaths") + scale_y_continuous(label=comma)
 
 ```
@@ -139,16 +138,16 @@ ggplot(EUTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) +
 #### Total Cases  by Day.
 
 ```{r}
-EU2 <- EU1 %>% filter(date >="2020-09-01")
-EU2 %>% ggplot(aes(x=date,y=new_cases,fill=location))+geom_area() + facet_wrap(~location,ncol = 2,scales="free_y") +
+df2 <- df1 %>% filter(date >="2020-09-01")
+df2 %>% ggplot(aes(x=date,y=new_cases,fill=location))+geom_area() + facet_wrap(~location,ncol = 2,scales="free_y") +
   expand_limits(y=0)
 ```
 
 #### Total Deaths  by Day.
 
 ```{r}
-EU2 <- EU1 %>% filter(date >="2020-09-01")
-EU2 %>% ggplot(aes(x=date,y=new_deaths,fill=location))+geom_area() + facet_wrap(~location,ncol = 2,scales="free_y") +expand_limits(y=0)
+df2 <- df1 %>% filter(date >="2020-09-01")
+df2 %>% ggplot(aes(x=date,y=new_deaths,fill=location))+geom_area() + facet_wrap(~location,ncol = 2,scales="free_y") +expand_limits(y=0)
   
 ```
 
@@ -168,12 +167,12 @@ df %>% ggplot() + geom_col(aes(x=date,y=total_deaths,fill=new_deaths)) +
 #### Plot by Country
 
 ```{r}
-EU1 %>% ggplot() + geom_area(aes(x=date,y=total_cases,fill=location)) +
+df1 %>% ggplot() + geom_area(aes(x=date,y=total_cases,fill=location)) +
   scale_y_continuous(labels = comma) +
   labs(title=" Cumulative Cases by Country") +
   facet_wrap(~location,ncol = 2,scales="free_y")
 
-EU1 %>% ggplot() + geom_area(aes(x=date,y=total_deaths,fill=location)) +
+df1 %>% ggplot() + geom_area(aes(x=date,y=total_deaths,fill=location)) +
   scale_y_continuous(labels = comma) +
   labs(title="Cumulative Deaths by Country") +
   facet_wrap(~location,ncol = 2,scales="free_y")
