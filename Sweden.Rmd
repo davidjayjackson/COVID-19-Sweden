@@ -42,7 +42,8 @@ df$DMA <- ma(df$new_deaths,28,centre=TRUE)
 ```{r}
 p1 <- df %>% filter(date >="2020-01-01" ) %>%
   ggplot() + geom_col(aes(x=date,y=new_cases,col="Daily Cases")) +
-  labs(title="Cases: Plot of Tuesday - Friday Data.") +ylim(0,10000)
+  labs(title="Cases: Plot of Tuesday - Friday Data.") +ylim(0,10000) +
+  geom_smooth(aes(x=date,y=new_cases),span=0.1)
 
 p2 <- df %>% filter(date >="2020-01-01" ) %>%
   ggplot() + geom_col(aes(x=date,y=CMA)) +
