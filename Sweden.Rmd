@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "05/26/2021  2:15 PM/EST"
+date: "05/27/2021  2:20 PM/EST"
 output: 
   html_document: 
     fig_width: 8
@@ -51,8 +51,9 @@ p2 <- df %>% filter(date >="2020-01-01" ) %>%
 
 p3 <- df %>% filter(date >="2020-01-01" ) %>%
   ggplot() + geom_col(aes(x=date,y=new_deaths)) +
-  labs(title="Deaths: Plot of Tuesday - Friday Data. ") +ylim(0,150)
-
+  labs(title="Deaths: Plot of Tuesday - Friday Data. ") +ylim(0,150) +
+  geom_smooth(aes(x=date,y=new_deaths,col="Loess"),span=0.1) +
+  geom_smooth(aes(x=date,y=new_deaths,col="lm"),method = "lm")
 p4 <- df %>% filter(date >="2020-01-01") %>%
   ggplot() + geom_col(aes(x=date,y=DMA)) +
   labs(title="Deaths: 28 Day Moving Average")
