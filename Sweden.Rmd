@@ -1,7 +1,7 @@
 ---
 title: 'SWEDEN: COVID-19 Analysis'
 author: "David Jackson"
-date: "06/04/2021  11:50 AM/EST"
+date: "06/06/2021  1:40 PM/EST"
 output: 
   html_document: 
     fig_width: 8
