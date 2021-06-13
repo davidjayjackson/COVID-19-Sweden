@@ -1,7 +1,7 @@
 ---
 title: "Sweden's COVID-19 Vaccine Rollout"
 author: "David Jackson"
-date: "06/06/2021 1:40 PM/EST"
+date: "06/13/2021 2:10 PM/EST"
 output: 
   html_document: 
     fig_width: 9
@@ -68,11 +68,12 @@ ggplotly(p2)
 ```{r}
 
 VAC$PeoplePercent <- VAC$people_vaccinated/VAC$population
-VAC %>%
+p3 <- VAC %>%
   ggplot(aes(x=date,y=PeoplePercent)) +
     geom_line() + scale_y_continuous(labels= percent) +
   labs(title="Percentage of People Receiving At Least Shot",
        y="Percent of Population")
+ggplotly(p3)
 ```
 
 ```{r}
@@ -80,11 +81,12 @@ VAC %>%
 VAC$PeoplFullVac <- VAC$people_fully_vaccinated/VAC$population
 ```
 ```{r}
-VAC %>% 
+p4 <- VAC %>% 
   ggplot(aes(x=date,y=PeoplFullVac)) +
     geom_line() + scale_y_continuous(labels= percent) +
   labs(title="Percentage of People Fully Vaccinated",
        y="Percent of Population")
+ggplotly(p4)
 ```
 
 
