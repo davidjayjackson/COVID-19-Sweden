@@ -16,6 +16,7 @@ library(RSQLite)
 library(plotly)
 library(dplyr)
 library(forecast)
+library(timetk)
 # theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed')))
 theme_set(theme_light())
 
@@ -80,16 +81,21 @@ Weekly_new_cases$DRate <- Weekly_new_deaths$new_deaths/Weekly_new_cases$new_case
 
 ```
 ```{r}
-ggplot(Weekly_new_cases) + geom_col(aes(x=Weekly,y=new_cases)) + 
-  labs(title="Weekly Cases",x="date date", y="Weekly Cases") +
-  geom_hline(yintercept = mean(Weekly_new_cases$new_cases),col="red",lwd=1.5) +
-  scale_y_continuous(labels = scales::comma) 
 
-
-ggplot(Weekly_new_deaths) + geom_col(aes(x=Weekly,y=new_deaths)) + 
-  labs(title="Weekly new_deaths",x="date date", y="Weekly Deaths") +
-  scale_y_continuous(labels = scales::comma) +
-  geom_hline(yintercept = mean(Weekly_new_deaths$new_deaths),col="red",lwd=1.5)
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "week",Cases =sum(new_cases)) %>%
+  ggplot() + geom_line(aes(x=date,y=Cases,col="Cases"),lwd=2) +
+  labs(title = "Ohio Covid-19 Cases by Week")
+# ggplot(Weekly_new_cases) + geom_col(aes(x=Weekly,y=new_cases)) + 
+#   labs(title="Weekly Cases",x="date date", y="Weekly Cases") +
+#   geom_hline(yintercept = mean(Weekly_new_cases$new_cases),col="red",lwd=1.5) +
+#   scale_y_continuous(labels = scales::comma) 
+# 
+# 
+# ggplot(Weekly_new_deaths) + geom_col(aes(x=Weekly,y=new_deaths)) + 
+#   labs(title="Weekly new_deaths",x="date date", y="Weekly Deaths") +
+#   scale_y_continuous(labels = scales::comma) +
+#   geom_hline(yintercept = mean(Weekly_new_deaths$new_deaths),col="red",lwd=1.5)
 ``` 
 
 #### Monthly new_cases and new_deaths
