@@ -1,0 +1,121 @@
+---
+title: 'Sweden Covid-19 Report : TimeTk'
+author: "David Jackson"
+date: "9/10/2021"
+output: 
+  html_document: 
+    fig_width: 9
+    fig_height: 6
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,error = FALSE, message = FALSE )
+library(tidyverse)
+library(scales)
+library(timetk)
+library(RSQLite)
+theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed')))
+```
+
+## R Markdown
+
+```{r}
+rm(list=ls())
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
+df <- dbGetQuery(db,"select * from OWID")
+df <- df %>% filter(location =="Sweden"  )
+df$date <- as.Date(df$date)
+```
+
+## Begin Analysis of Covid-19 Cases: Feb. 1, 2020
+
+```{r}
+summary(df$new_cases)
+quantile(df$new_cases)
+
+```
+```{r}
+df %>% filter(date >="2021-01-01") %>% ggplot(aes(x=date,y=new_cases,fill="cases")) + geom_col() + scale_y_continuous(labels = comma) +
+  geom_smooth(method = loess,span=0.05) + ylim(0,25000) +
+  labs(title = "Sweden Daily Cases",subtitle = "(With Loess curve)")
+```
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "week",Cases =sum(new_cases)) %>%
+  ggplot() + geom_line(aes(x=date,y=Cases,col="Cases"),lwd=2) +
+  labs(title = "Sweden Covid-19 Cases by Week")
+```
+
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "month",Cases =sum(new_cases)) %>%
+  ggplot() + geom_line(aes(x=date,y=Cases,col="Cases"),lwd=2) +
+  labs(title = "Sweden Covid-19 Cases by Month")
+```
+
+
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "bimonth",Cases =sum(new_cases)) %>%
+  ggplot() + geom_line(aes(x=date,y=Cases,col="Cases"),lwd=2) +
+  labs(title = "Sweden Covid-19 Cases by Bimonth")
+```
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "quarter",Cases =sum(new_cases)) %>%
+  ggplot() + geom_line(aes(x=date,y=Cases,col="Cases"),lwd=2) +
+  labs(title = "Sweden Covid-19 Cases by Quarter")
+```
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "halfyear",Cases =sum(new_cases)) %>%
+  ggplot() + geom_line(aes(x=date,y=Cases,col="Cases"),lwd=2) +
+  labs(title = "Sweden Covid-19 Cases by Half Year")
+```
+
+
+## First Death was Reported on Mar. 10, 2020
+
+```{r}
+summary(df$new_deaths,na.rm=TRUE)
+quantile(df$new_deaths,na.rm=TRUE)
+
+```
+```{r}
+df  %>% ggplot(aes(x=date,y=new_deaths,fill="Deaths")) + geom_line() + scale_y_continuous(labels = comma) +
+  geom_smooth(method = loess,span=0.1)  +
+  labs(title = "Sweden Daily Deaths",subtitle = "(With Loess curve)")
+```
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "week",Deaths =sum(new_deaths)) %>%
+  ggplot() + geom_line(aes(x=date,y=Deaths,col="Cases"),lwd=2) +
+  labs(title = "Sweden Covid-19 Deaths by Week")
+```
+
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "month",Deaths =sum(new_deaths)) %>%
+  ggplot() + geom_line(aes(x=date,y=Deaths,col="Deaths"),lwd=2) +
+  labs(title = "Sweden Covid-19 Deaths by Month")
+```
+
+
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "bimonth",Deaths =sum(new_deaths)) %>%
+  ggplot() + geom_line(aes(x=date,y=Deaths,col="Deaths"),lwd=2) +
+  labs(title = "Sweden Covid-19 Deaths by Bimonth")
+```
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "quarter",Deaths =sum(new_deaths)) %>%
+  ggplot() + geom_line(aes(x=date,y=Deaths,col="Deaths"),lwd=2) +
+  labs(title = "Sweden Covid-19 Deaths by Quarter")
+```
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "halfyear",Deaths =sum(new_deaths)) %>%
+  ggplot() + geom_line(aes(x=date,y=Deaths,col="Deaths"),lwd=2) +
+  labs(title = "Sweden Covid-19 Deaths by Half Year")
+```
