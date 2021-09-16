@@ -34,7 +34,7 @@ SWE$date <- as.Date(SWE$date)
 ```{r}
 VAC <- SWE %>% filter(date >="2021-05-10") %>% 
   select(date,people_vaccinated, people_fully_vaccinated,
-         new_vaccinations,total_vaccinations,population)
+         new_vaccinations,total_vaccinations,population) %>% na.omit()
 ```
 
 ### Individual Plot for Each Type of Vaccination
