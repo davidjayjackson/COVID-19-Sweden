@@ -85,7 +85,7 @@ Weekly_new_cases$DRate <- Weekly_new_deaths$new_deaths/Weekly_new_cases$new_case
 df %>% group_by(date) %>%
   summarise_by_time(date,.by = "week",Cases =sum(new_cases)) %>%
   ggplot() + geom_col(aes(x=date,y=Cases,col="Cases"),lwd=2) +
-  labs(title = "Ohio Covid-19 Cases by Week")
+  labs(title = "Sweden Covid-19 Cases by Week")
 # ggplot(Weekly_new_cases) + geom_col(aes(x=Weekly,y=new_cases)) + 
 #   labs(title="Weekly Cases",x="date date", y="Weekly Cases") +
 #   geom_hline(yintercept = mean(Weekly_new_cases$new_cases),col="red",lwd=1.5) +
