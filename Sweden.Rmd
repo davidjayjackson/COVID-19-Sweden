@@ -15,7 +15,8 @@ library(scales)
 library(RSQLite)
 library(plotly)
 library(dplyr)
-library(forecast)
+# library(forecast)
+library(pracma)
 library(timetk)
 # theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed')))
 theme_set(theme_light())
@@ -32,8 +33,8 @@ df <- df[order(df$date),]
 ### Replace NA with mean new_deaths
 df$new_deaths[which(is.na(df$new_deaths))] <- mean(df$new_deaths,na.rm = TRUE)
 df$new_deaths<- ifelse(df$new_deaths <0,mean(df$new_deaths,na.rm = TRUE),df$new_deaths)
-df$CMA <- ma(df$new_cases,28,centre=TRUE)
-df$DMA <- ma(df$new_deaths,28,centre=TRUE)
+df$CMA <- movavg(df$new_cases,14,type = "e")
+df$DMA <- movavg(df$new_deaths,14,type = "e")
 # dbDisconnect(db)
 ```
 
@@ -48,7 +49,7 @@ p1 <- df %>% filter(date >="2020-01-01" ) %>%
 
 p2 <- df %>% filter(date >="2020-01-01" ) %>%
   ggplot() + geom_col(aes(x=date,y=CMA)) +
-  labs(title="Cases : 28 Day Moving Average")
+  labs(title="Cases : 14 Day Moving Average")
 
 p3 <- df %>% filter(date >="2020-01-01" ) %>%
   ggplot() + geom_col(aes(x=date,y=new_deaths)) +
@@ -57,7 +58,7 @@ p3 <- df %>% filter(date >="2020-01-01" ) %>%
   geom_smooth(aes(x=date,y=new_deaths,col="lm"),method = "lm")
 p4 <- df %>% filter(date >="2020-01-01") %>%
   ggplot() + geom_col(aes(x=date,y=DMA)) +
-  labs(title="Deaths: 28 Day Moving Average")
+  labs(title="Deaths: 14 Day Moving Average")
 ggplotly(p1)
 ggplotly(p2)
 ggplotly(p3)
