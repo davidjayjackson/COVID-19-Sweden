@@ -42,6 +42,32 @@ df$DMA <- movavg(df$new_deaths,14,type = "e")
 * https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/
 
 ```{r}
+df$Year <- lubridate::year(df$date)
+df$Year <- as.factor(df$Year)
+ggplot(df) + geom_col(aes(x=Year,y=new_cases)) +
+  labs(title = "Covid-19 Cases By Year") +
+  scale_y_continuous(labels = comma)
+
+ggplot(df) + geom_col(aes(x=Year,y=new_deaths)) +
+  labs(title = "Covid-19 Deaths By Year") +
+  scale_y_continuous(labels = comma)
+```
+```{r}
+df$Year <- as.factor(df$Year)
+ggplot(df) + geom_col(aes(x=Year,y=new_cases)) +
+  labs(title = "Covid-19 Cases By Year") +
+  scale_y_continuous(labels = comma)
+
+ggplot(df) + geom_col(aes(x=Year,y=new_deaths)) +
+  labs(title = "Covid-19 Deaths By Year") +
+  scale_y_continuous(labels = comma)
+```
+
+
+
+
+
+```{r}
 p1 <- df %>% filter(date >="2020-01-01" ) %>%
   ggplot() + geom_col(aes(x=date,y=new_cases,col="Daily Cases")) +
   labs(title="Cases: Plot of Tuesday - Friday Data.") +ylim(0,10000) +
