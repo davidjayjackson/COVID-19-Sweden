@@ -24,7 +24,7 @@ theme_set(theme_light())
 ```
 ```{r}
 rm(list=ls())
-source("../DATA/movavg.R")
+# source("../DATA/movavg.R")
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
 df <- dbGetQuery(db,"select * from OWID")
 df <- subset(df,location =="Sweden"  )
