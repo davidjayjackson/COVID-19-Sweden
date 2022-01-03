@@ -104,7 +104,6 @@ df$Weekly <- as.Date(cut(df$date,
 ```{r}
 Weekly_new_cases <- aggregate(new_cases~Weekly,df,FUN=sum)
 Weekly_new_deaths <- aggregate(new_deaths~Weekly,df,FUN=sum)
-Weekly_new_cases$DRate <- Weekly_new_deaths$new_deaths/Weekly_new_cases$new_cases
 
 ```
 ```{r}
@@ -113,16 +112,11 @@ df %>% group_by(date) %>%
   summarise_by_time(date,.by = "week",Cases =sum(new_cases)) %>%
   ggplot() + geom_col(aes(x=date,y=Cases,col="Cases"),lwd=2) +
   labs(title = "Sweden Covid-19 Cases by Week")
-# ggplot(Weekly_new_cases) + geom_col(aes(x=Weekly,y=new_cases)) + 
-#   labs(title="Weekly Cases",x="date date", y="Weekly Cases") +
-#   geom_hline(yintercept = mean(Weekly_new_cases$new_cases),col="red",lwd=1.5) +
-#   scale_y_continuous(labels = scales::comma) 
-# 
-# 
-# ggplot(Weekly_new_deaths) + geom_col(aes(x=Weekly,y=new_deaths)) + 
-#   labs(title="Weekly new_deaths",x="date date", y="Weekly Deaths") +
-#   scale_y_continuous(labels = scales::comma) +
-#   geom_hline(yintercept = mean(Weekly_new_deaths$new_deaths),col="red",lwd=1.5)
+
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "week",Cases =sum(new_deaths)) %>%
+  ggplot() + geom_col(aes(x=date,y=Cases,col="Cases"),lwd=2) +
+  labs(title = "Sweden Covid-19 Deaths by Week")
 ``` 
 
 #### Monthly new_cases and new_deaths
@@ -131,7 +125,7 @@ df %>% group_by(date) %>%
 
 Monthly_new_cases <- aggregate(new_cases~Monthly,df,FUN=sum)
 Monthly_new_deaths <- aggregate(new_deaths~Monthly,df,FUN=sum)
-Monthly_new_cases$DRate <- Monthly_new_deaths$new_deaths/Monthly_new_cases$new_cases
+
 
 ```
 ```{r}

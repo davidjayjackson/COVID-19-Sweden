@@ -37,9 +37,9 @@ SWE <- dbGetQuery(db,"select * from OWID where location ='Sweden'")
 SWE$date <- as.Date(SWE$date)
 ```
 ```{r}
-VAC <- SWE %>% filter(date >="2021-05-10") %>% 
+VAC <- SWE  %>% filter(people_vaccinated >0) %>%
   select(date,people_vaccinated, people_fully_vaccinated,
-         new_vaccinations,total_vaccinations,population) %>% na.omit()
+         new_vaccinations,total_vaccinations,population) 
 ```
 
 ### Individual Plot for Each Type of Vaccination
