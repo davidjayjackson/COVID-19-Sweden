@@ -30,6 +30,7 @@ df <- dbGetQuery(db,"select * from OWID")
 df <- subset(df,location =="Sweden"  )
 df$date <- as.Date(df$date)
 df <- df[order(df$date),]
+df <- df %>% filter(date >= Sys.Date() -365)
 ### Replace NA with mean new_deaths
 df$new_deaths[which(is.na(df$new_deaths))] <- mean(df$new_deaths,na.rm = TRUE)
 df$new_deaths<- ifelse(df$new_deaths <0,mean(df$new_deaths,na.rm = TRUE),df$new_deaths)
@@ -68,7 +69,7 @@ ggplot(df) + geom_col(aes(x=Year,y=new_deaths)) +
 
 
 ```{r}
-p1 <- df %>% filter(date >="2020-01-01" ) %>%
+p1 <- df  %>%
   ggplot() + geom_col(aes(x=date,y=new_cases,col="Daily Cases")) +
   labs(title="Cases: Plot of Tuesday - Friday Data.") +ylim(0,10000) +
   geom_smooth(aes(x=date,y=new_cases),span=0.1)
