@@ -115,8 +115,8 @@ df %>% group_by(date) %>%
   labs(title = "Sweden Covid-19 Cases by Week")
 
 df %>% group_by(date) %>%
-  summarise_by_time(date,.by = "week",Cases =sum(new_deaths)) %>%
-  ggplot() + geom_col(aes(x=date,y=Cases,col="Cases"),lwd=2) +
+  summarise_by_time(date,.by = "week",Deaths =sum(new_deaths)) %>%
+  ggplot() + geom_col(aes(x=date,y=Deaths,col="Deaths"),lwd=2) +
   labs(title = "Sweden Covid-19 Deaths by Week")
 ``` 
 
@@ -137,74 +137,5 @@ ggplot(Monthly_new_cases) + geom_col(aes(x=Monthly,y=new_cases)) +
 ggplot(Monthly_new_deaths) + geom_col(aes(x=Monthly,y=new_deaths)) +
   labs(title="Monthly Deaths") +
   scale_y_continuous(labels = scales::comma)
-```
-
-#### Sweden in the df: Covid-19 Cases and Deaths
-* df Counties with Population between 9,000,000 and 12,000,000
-
-```{r}
-
-df1 <- subset(df,location == c("Belgium","Czechia","Greece","Sweden","Hungary","Austria"))
-
-dfTotal <-df1 %>% group_by(location) %>% summarise(
-                                Case =sum(new_cases,na.rm = TRUE),
-                                Deaths = sum(new_deaths,na.rm = TRUE))
-dfTotal$Rate <- dfTotal$Deaths/dfTotal$Case
-```
-
-#### Plots of Total Cases and Deaths
-
-```{r}
-ggplot(dfTotal) + geom_col(aes(x=reorder(location,Case),y=Case)) + 
-  labs(title="Total Cases by Country",x="Countries",y="Total Cases") + scale_y_continuous(label=comma)
-
-``` 
-```{r}
-ggplot(dfTotal) + geom_col(aes(x=reorder(location,Deaths),y=Deaths)) + 
-  labs(title="Total Deaths by Country",x="Countries",y="Total  Deaths") + scale_y_continuous(label=comma)
-
-```
-
-#### Total Cases  by Day.
-
-```{r}
-df2 <- df1 %>% filter(date >="2020-09-01")
-df2 %>% ggplot(aes(x=date,y=new_cases,fill=location))+geom_area() + facet_wrap(~location,ncol = 2,scales="free_y") +
-  expand_limits(y=0)
-```
-
-#### Total Deaths  by Day.
-
-```{r}
-df2 <- df1 %>% filter(date >="2020-09-01")
-df2 %>% ggplot(aes(x=date,y=new_deaths,fill=location))+geom_area() + facet_wrap(~location,ncol = 2,scales="free_y") +expand_limits(y=0)
-  
-```
-
-### Cumlative Totals (Cases and Deaths) for Sweden
-* Total Cases and Deaths to date
-
-```{r}
-df %>% ggplot() + geom_col(aes(x=date,y=total_cases,fill=new_cases)) +
-  scale_y_continuous(labels = comma) +
-  labs(title="Sweden Cumulative Cases by Date")
-
-df %>% ggplot() + geom_col(aes(x=date,y=total_deaths,fill=new_deaths)) +
-  scale_y_continuous(labels = comma) +
-  labs(title="Sweden Cumulative Deaths by Date")
-```
-
-#### Plot by Country
-
-```{r}
-df1 %>% ggplot() + geom_area(aes(x=date,y=total_cases,fill=location)) +
-  scale_y_continuous(labels = comma) +
-  labs(title=" Cumulative Cases by Country") +
-  facet_wrap(~location,ncol = 2,scales="free_y")
-
-df1 %>% ggplot() + geom_area(aes(x=date,y=total_deaths,fill=location)) +
-  scale_y_continuous(labels = comma) +
-  labs(title="Cumulative Deaths by Country") +
-  facet_wrap(~location,ncol = 2,scales="free_y")
 ```
 
