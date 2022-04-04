@@ -135,7 +135,7 @@ ggplot(Monthly_new_cases) + geom_col(aes(x=Monthly,y=new_cases)) +
   scale_y_continuous(labels = scales::comma)
 
 ggplot(Monthly_new_deaths) + geom_col(aes(x=Monthly,y=new_deaths)) +
-  labs(title="Monthly Deaths") +
+  labs(title="**Monthly Deaths**") +
   scale_y_continuous(labels = scales::comma)
 ```
 
